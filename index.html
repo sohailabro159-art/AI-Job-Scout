@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Case File — Personal Job Assistant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Spectral:wght@400;500;600;700&family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div id="app">
+
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">CF</span>
+      <div class="brand-text">
+        <span class="brand-title">Case File</span>
+        <span class="brand-sub">personal job assistant</span>
+      </div>
+    </div>
+
+    <nav class="nav">
+      <button class="nav-item active" data-view="dashboard">
+        <span class="nav-num">01</span> Dashboard
+      </button>
+      <button class="nav-item" data-view="intake">
+        <span class="nav-num">02</span> Intake
+      </button>
+      <button class="nav-item" data-view="board">
+        <span class="nav-num">03</span> Board
+      </button>
+      <button class="nav-item" data-view="applied">
+        <span class="nav-num">04</span> Applied
+      </button>
+      <button class="nav-item" data-view="sources">
+        <span class="nav-num">05</span> Sources
+      </button>
+      <button class="nav-item" data-view="settings">
+        <span class="nav-num">06</span> Settings
+      </button>
+    </nav>
+
+    <div class="sidebar-footer">
+      <div id="storageStatus" class="storage-status">checking storage…</div>
+    </div>
+  </aside>
+
+  <!-- Main -->
+  <main class="main">
+
+    <!-- DASHBOARD -->
+    <section class="view" id="view-dashboard">
+      <header class="view-header">
+        <div>
+          <p class="eyebrow">Today · <span id="todayDate"></span></p>
+          <h1>Daily Report</h1>
+        </div>
+        <button class="btn btn-primary" id="btnRefreshReport">Refresh report</button>
+      </header>
+
+      <div class="stat-row" id="statRow"></div>
+
+      <div class="dash-grid">
+        <div class="panel">
+          <h2>Best matches</h2>
+          <div id="bestMatches" class="mini-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Needs manual action</h2>
+          <div id="manualQueue" class="mini-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Upcoming deadlines</h2>
+          <div id="deadlineList" class="mini-list"></div>
+        </div>
+        <div class="panel">
+          <h2>Applied recently</h2>
+          <div id="appliedRecent" class="mini-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- INTAKE -->
+    <section class="view hidden" id="view-intake">
+      <header class="view-header">
+        <div>
+          <p class="eyebrow">Step 02</p>
+          <h1>Bring in a job</h1>
+        </div>
+      </header>
+
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="paste">Paste one job</button>
+        <button class="tab-btn" data-tab="bulk">Bulk import</button>
+        <button class="tab-btn" data-tab="form">Quick form</button>
+      </div>
+
+      <div class="tab-panel" id="tab-paste">
+        <p class="hint">Paste the raw post text from Facebook, WhatsApp, a portal, or an email — as messy as it is. The assistant will pull out the details, score it, and file it.</p>
+        <textarea id="pasteInput" rows="10" placeholder="Paste the job post here…"></textarea>
+        <div class="field-row">
+          <label>Source</label>
+          <input type="text" id="pasteSource" placeholder="e.g. Hyderabad Jobs FB Group">
+        </div>
+        <button class="btn btn-primary" id="btnProcessPaste">Process this job</button>
+      </div>
+
+      <div class="tab-panel hidden" id="tab-bulk">
+        <p class="hint">Paste several postings at once. Separate each job with a line of dashes <code>---</code>. The assistant will split, extract, and score all of them in one pass.</p>
+        <textarea id="bulkInput" rows="14" placeholder="Job 1 text...
+---
+Job 2 text...
+---
+Job 3 text..."></textarea>
+        <div class="field-row">
+          <label>Source (applies to all)</label>
+          <input type="text" id="bulkSource" placeholder="e.g. Weekly portal sweep">
+        </div>
+        <button class="btn btn-primary" id="btnProcessBulk">Process all</button>
+      </div>
+
+      <div class="tab-panel hidden" id="tab-form">
+        <p class="hint">Already know the details? Skip extraction and enter them directly — still gets scored automatically.</p>
+        <div class="form-grid">
+          <div class="field-row"><label>Job title</label><input id="fTitle" type="text"></div>
+          <div class="field-row"><label>Company / organisation</label><input id="fCompany" type="text"></div>
+          <div class="field-row"><label>Location</label><input id="fLocation" type="text" value="Hyderabad, Sindh"></div>
+          <div class="field-row"><label>Salary (if known)</label><input id="fSalary" type="text" placeholder="e.g. 35,000–40,000 PKR"></div>
+          <div class="field-row"><label>Deadline</label><input id="fDeadline" type="date"></div>
+          <div class="field-row"><label>Apply method</label>
+            <select id="fApplyMethod">
+              <option value="email">Email</option>
+              <option value="whatsapp">WhatsApp</option>
+              <option value="website">Website / portal form</option>
+              <option value="inperson">In person / walk-in</option>
+            </select>
+          </div>
+          <div class="field-row"><label>Contact (email / number / link)</label><input id="fContact" type="text"></div>
+          <div class="field-row full"><label>Description / requirements</label><textarea id="fDesc" rows="5"></textarea></div>
+        </div>
+        <button class="btn btn-primary" id="btnProcessForm">Score and file this job</button>
+      </div>
+
+      <div id="intakeStatus" class="intake-status hidden"></div>
+      <div id="intakeResults" class="intake-results"></div>
+    </section>
+
+    <!-- BOARD -->
+    <section class="view hidden" id="view-board">
+      <header class="view-header">
+        <div>
+          <p class="eyebrow">Step 03</p>
+          <h1>Job Board</h1>
+        </div>
+        <div class="board-filters">
+          <select id="filterApply">
+            <option value="all">All apply types</option>
+            <option value="auto">Auto-apply only</option>
+            <option value="manual">Manual-apply only</option>
+          </select>
+          <select id="filterStatus">
+            <option value="active">Active (not applied/rejected)</option>
+            <option value="all">All statuses</option>
+          </select>
+        </div>
+      </header>
+
+      <div class="board" id="board">
+        <div class="board-col" data-priority="high">
+          <h3 class="col-title col-high">High Priority</h3>
+          <div class="col-body" id="col-high"></div>
+        </div>
+        <div class="board-col" data-priority="medium">
+          <h3 class="col-title col-medium">Medium Priority</h3>
+          <div class="col-body" id="col-medium"></div>
+        </div>
+        <div class="board-col" data-priority="low">
+          <h3 class="col-title col-low">Low Priority</h3>
+          <div class="col-body" id="col-low"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- APPLIED -->
+    <section class="view hidden" id="view-applied">
+      <header class="view-header">
+        <div>
+          <p class="eyebrow">Step 04</p>
+          <h1>Applied</h1>
+        </div>
+      </header>
+      <table class="applied-table">
+        <thead><tr><th>Job</th><th>Company</th><th>Applied on</th><th>Method</th><th>Status</th><th></th></tr></thead>
+        <tbody id="appliedTableBody"></tbody>
+      </table>
+    </section>
+
+    <!-- SOURCES -->
+    <section class="view hidden" id="view-sources">
+      <header class="view-header">
+        <div>
+          <p class="eyebrow">Step 05</p>
+          <h1>Trusted Sources</h1>
+        </div>
+      </header>
+      <p class="hint">Keep a running list of where you watch for jobs. This is a reference list only — open these yourself and paste postings into Intake; the assistant can't browse them for you (see note in Settings).</p>
+      <div class="field-row">
+        <input type="text" id="sourceNameInput" placeholder="Source name, e.g. 'Hyderabad Govt &amp; Pvt Jobs' FB group">
+        <input type="text" id="sourceLinkInput" placeholder="Link (optional)">
+        <select id="sourceTypeInput">
+          <option>Facebook Group</option>
+          <option>Facebook Page</option>
+          <option>WhatsApp Channel</option>
+          <option>Job Portal</option>
+          <option>Company Career Page</option>
+          <option>Newspaper</option>
+          <option>Other</option>
+        </select>
+        <button class="btn btn-secondary" id="btnAddSource">Add source</button>
+      </div>
+      <div id="sourceList" class="source-list"></div>
+    </section>
+
+    <!-- SETTINGS -->
+    <section class="view hidden" id="view-settings">
+      <header class="view-header">
+        <div>
+          <p class="eyebrow">Step 06</p>
+          <h1>Your Profile</h1>
+        </div>
+        <button class="btn btn-primary" id="btnSaveProfile">Save profile</button>
+      </header>
+
+      <div class="note-box">
+        <strong>How this works:</strong> the AI features on this page (extraction, scoring, CV/cover letter generation) call Claude's API, which only functions while you're viewing this inside Claude. If you save this file and open it directly in a browser later, everything about saving/organising jobs still works, but the AI steps won't respond — you'd need to bring the pasted job back into a Claude chat to process it.
+      </div>
+
+      <div class="form-grid">
+        <div class="field-row"><label>Full name</label><input id="pName" type="text"></div>
+        <div class="field-row"><label>Location</label><input id="pLocation" type="text"></div>
+        <div class="field-row"><label>Education</label><input id="pEducation" type="text"></div>
+        <div class="field-row"><label>Target salary range (PKR)</label><input id="pSalary" type="text"></div>
+        <div class="field-row"><label>Phone</label><input id="pPhone" type="text"></div>
+        <div class="field-row"><label>Email</label><input id="pEmail" type="text"></div>
+        <div class="field-row full"><label>Target roles (comma separated)</label><input id="pRoles" type="text"></div>
+        <div class="field-row full"><label>Skills (comma separated)</label><input id="pSkills" type="text"></div>
+        <div class="field-row full"><label>Experience summary</label><textarea id="pExperience" rows="4"></textarea></div>
+        <div class="field-row full"><label>Languages</label><input id="pLanguages" type="text"></div>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- Job detail modal -->
+<div id="modalOverlay" class="modal-overlay hidden">
+  <div class="modal">
+    <button class="modal-close" id="modalClose">&times;</button>
+    <div id="modalContent"></div>
+  </div>
+</div>
+
+<div id="toast" class="toast hidden"></div>
+
+<script src="app.js"></script>
+</body>
+</html>
