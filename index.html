@@ -3,12 +3,167 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>AI Job Scout</title>
+<title>AI Job Hunter</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
+
+<!-- =========================================================
+     SETUP WIZARD (shown on first run — hidden once profile exists)
+     ========================================================= -->
+<div id="setupWizard" class="wizard-overlay">
+  <div class="wizard-card">
+
+    <div class="wizard-progress" id="wizardProgress" aria-label="Setup progress">
+      <span class="wizard-step-dot active" data-step="1">1</span>
+      <span class="wizard-step-dot" data-step="2">2</span>
+      <span class="wizard-step-dot" data-step="3">3</span>
+      <span class="wizard-step-dot" data-step="4">4</span>
+      <span class="wizard-step-dot" data-step="5">5</span>
+      <span class="wizard-step-dot" data-step="6">6</span>
+      <span class="wizard-step-dot" data-step="7">7</span>
+      <span class="wizard-step-dot" data-step="8">8</span>
+    </div>
+
+    <!-- Step 1: Personal Information -->
+    <section class="wizard-step active" id="wizardStep1">
+      <p class="eyebrow">Step 1 of 8</p>
+      <h2>Tell us about you</h2>
+      <p class="page-sub">This stays on your device only and powers every match, score, and document the assistant generates.</p>
+      <div class="form-grid">
+        <label class="field-row"><span>Full name</span><input id="wName" type="text" placeholder="Your full name"></label>
+        <label class="field-row"><span>Email</span><input id="wEmail" type="email" placeholder="you@example.com"></label>
+        <label class="field-row"><span>Phone</span><input id="wPhone" type="text" placeholder="+92 300 0000000"></label>
+        <label class="field-row"><span>Country</span><input id="wCountry" type="text" placeholder="Pakistan"></label>
+        <label class="field-row"><span>Province / State</span><input id="wProvince" type="text"></label>
+        <label class="field-row"><span>City</span><input id="wCity" type="text"></label>
+        <label class="field-row full"><span>Address</span><input id="wAddress" type="text" placeholder="Optional"></label>
+      </div>
+    </section>
+
+    <!-- Step 2: Education -->
+    <section class="wizard-step" id="wizardStep2">
+      <p class="eyebrow">Step 2 of 8</p>
+      <h2>Education</h2>
+      <div class="form-grid">
+        <label class="field-row"><span>Degree</span><input id="wDegree" type="text" placeholder="e.g. BS English"></label>
+        <label class="field-row"><span>University / Institute</span><input id="wUniversity" type="text"></label>
+        <label class="field-row"><span>Passing year</span><input id="wPassingYear" type="text" placeholder="2024"></label>
+        <label class="field-row"><span>CGPA / Percentage</span><input id="wCgpa" type="text" placeholder="Optional"></label>
+      </div>
+      <div class="field-row full">
+        <span>Certificates</span>
+        <div class="tag-input-row">
+          <input id="wCertInput" type="text" placeholder="Add a certificate and press Enter">
+          <button class="btn btn-secondary btn-small" id="wCertAdd" type="button">Add</button>
+        </div>
+        <div class="tag-list" id="wCertList" aria-live="polite"></div>
+      </div>
+    </section>
+
+    <!-- Step 3: Skills -->
+    <section class="wizard-step" id="wizardStep3">
+      <p class="eyebrow">Step 3 of 8</p>
+      <h2>Skills</h2>
+      <p class="page-sub">Add as many as apply — these drive matching and scoring.</p>
+      <div class="tag-input-row">
+        <input id="wSkillInput" type="text" placeholder="e.g. MS Excel, and press Enter">
+        <button class="btn btn-secondary btn-small" id="wSkillAdd" type="button">Add</button>
+      </div>
+      <div class="tag-list" id="wSkillList" aria-live="polite"></div>
+    </section>
+
+    <!-- Step 4: Experience -->
+    <section class="wizard-step" id="wizardStep4">
+      <p class="eyebrow">Step 4 of 8</p>
+      <h2>Experience</h2>
+      <p class="page-sub">Previous jobs, internships, or volunteer work — add each one.</p>
+      <div class="form-grid">
+        <label class="field-row"><span>Type</span>
+          <select id="wExpType">
+            <option value="job">Previous job</option>
+            <option value="internship">Internship</option>
+            <option value="volunteer">Volunteer work</option>
+          </select>
+        </label>
+        <label class="field-row"><span>Role / title</span><input id="wExpRole" type="text"></label>
+        <label class="field-row"><span>Organisation</span><input id="wExpOrg" type="text"></label>
+        <label class="field-row"><span>Duration</span><input id="wExpDuration" type="text" placeholder="e.g. Jan 2023 – Jun 2023"></label>
+        <label class="field-row full"><span>Description</span><textarea id="wExpDesc" rows="3"></textarea></label>
+      </div>
+      <button class="btn btn-secondary btn-small" id="wExpAdd" type="button">Add experience</button>
+      <div class="entry-list" id="wExpList" aria-live="polite"></div>
+    </section>
+
+    <!-- Step 5: Preferred Jobs -->
+    <section class="wizard-step" id="wizardStep5">
+      <p class="eyebrow">Step 5 of 8</p>
+      <h2>Preferred job categories</h2>
+      <div class="checkbox-grid" id="wCategoryGrid">
+        <label class="checkbox-tile"><input type="checkbox" value="government"><span>Government</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="ngo"><span>NGO</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="private"><span>Private</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="teaching"><span>Teaching</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="administration"><span>Administration</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="hr"><span>HR</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="it"><span>IT</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="data_entry"><span>Data Entry</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="customer_support"><span>Customer Support</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="remote"><span>Remote</span></label>
+      </div>
+    </section>
+
+    <!-- Step 6: Preferred Cities -->
+    <section class="wizard-step" id="wizardStep6">
+      <p class="eyebrow">Step 6 of 8</p>
+      <h2>Preferred cities</h2>
+      <p class="page-sub">Add every city you'd consider working in.</p>
+      <div class="tag-input-row">
+        <input id="wCityInput" type="text" placeholder="e.g. Hyderabad, and press Enter">
+        <button class="btn btn-secondary btn-small" id="wCityAdd" type="button">Add</button>
+      </div>
+      <div class="tag-list" id="wCityList" aria-live="polite"></div>
+    </section>
+
+    <!-- Step 7: Upload Resume -->
+    <section class="wizard-step" id="wizardStep7">
+      <p class="eyebrow">Step 7 of 8</p>
+      <h2>Upload your resume</h2>
+      <p class="page-sub">PDF, DOCX, or TXT. This helps generate better-tailored applications. You can skip this and add it later from the Resume page.</p>
+      <div class="dropzone" id="wResumeDropzone" tabindex="0" role="button" aria-label="Upload resume">
+        <span class="dropzone-icon" aria-hidden="true">⇧</span>
+        <p>Drag a file here, or click to browse</p>
+        <input type="file" id="wResumeFile" accept=".pdf,.docx,.txt" hidden>
+      </div>
+      <div id="wResumeFileName" class="file-chip hidden"></div>
+    </section>
+
+    <!-- Step 8: Select Job Sources -->
+    <section class="wizard-step" id="wizardStep8">
+      <p class="eyebrow">Step 8 of 8</p>
+      <h2>Select job sources</h2>
+      <p class="page-sub">Choose the categories you'd like the assistant to focus on. You can fine-tune individual sources later.</p>
+      <div class="checkbox-grid" id="wSourceCategoryGrid">
+        <label class="checkbox-tile"><input type="checkbox" value="government" checked><span>Government</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="ngo" checked><span>NGOs</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="organizations" checked><span>Organizations</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="hospitals"><span>Hospitals</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="universities"><span>Universities</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="portals" checked><span>Job Portals</span></label>
+        <label class="checkbox-tile"><input type="checkbox" value="career_pages" checked><span>Company Career Pages</span></label>
+      </div>
+    </section>
+
+    <div class="wizard-nav">
+      <button class="btn btn-secondary" id="wizardBack" type="button">Back</button>
+      <button class="btn btn-ghost" id="wizardSkip" type="button">Skip setup for now</button>
+      <button class="btn btn-primary" id="wizardNext" type="button">Continue</button>
+      <button class="btn btn-primary hidden" id="wizardFinish" type="button">Finish setup</button>
+    </div>
+  </div>
+</div>
 
 <div id="app">
 
@@ -17,66 +172,44 @@
     <div class="brand">
       <span class="brand-mark" aria-hidden="true">AJ</span>
       <div class="brand-text">
-        <span class="brand-title">AI Job Scout</span>
+        <span class="brand-title">AI Job Hunter</span>
         <span class="brand-sub">your personal recruiter</span>
       </div>
     </div>
 
     <nav class="nav" aria-label="Main menu">
-      <button class="nav-item active" data-view="dashboard" aria-current="page">
-        <span class="nav-icon" aria-hidden="true">⌂</span>
-        <span class="nav-label">Dashboard</span>
-      </button>
-      <button class="nav-item" data-view="intake">
-        <span class="nav-icon" aria-hidden="true">✦</span>
-        <span class="nav-label">Job Scout</span>
-      </button>
-      <button class="nav-item" data-view="board">
-        <span class="nav-icon" aria-hidden="true">▤</span>
-        <span class="nav-label">Job Board</span>
-      </button>
-      <button class="nav-item" data-view="applied">
-        <span class="nav-icon" aria-hidden="true">✓</span>
-        <span class="nav-label">Applications</span>
-      </button>
-      <button class="nav-item" data-view="analytics">
-        <span class="nav-icon" aria-hidden="true">◔</span>
-        <span class="nav-label">Analytics</span>
-      </button>
-      <button class="nav-item" data-view="assistant">
-        <span class="nav-icon" aria-hidden="true">◈</span>
-        <span class="nav-label">AI Assistant</span>
-      </button>
-      <button class="nav-item" data-view="sources">
-        <span class="nav-icon" aria-hidden="true">⌘</span>
-        <span class="nav-label">Sources</span>
-      </button>
-      <button class="nav-item" data-view="settings">
-        <span class="nav-icon" aria-hidden="true">⚙</span>
-        <span class="nav-label">Settings</span>
-      </button>
+      <button class="nav-item active" data-view="dashboard" aria-current="page"><span class="nav-icon" aria-hidden="true">⌂</span><span class="nav-label">Dashboard</span></button>
+      <button class="nav-item" data-view="profile"><span class="nav-icon" aria-hidden="true">◎</span><span class="nav-label">My Profile</span></button>
+      <button class="nav-item" data-view="resume"><span class="nav-icon" aria-hidden="true">▤</span><span class="nav-label">Resume</span></button>
+      <button class="nav-item" data-view="sources"><span class="nav-icon" aria-hidden="true">⌘</span><span class="nav-label">Job Sources</span></button>
+      <button class="nav-item" data-view="hunter"><span class="nav-icon" aria-hidden="true">◈</span><span class="nav-label">Job Hunter</span></button>
+      <button class="nav-item" data-view="matched"><span class="nav-icon" aria-hidden="true">✦</span><span class="nav-label">Matched Jobs</span></button>
+      <button class="nav-item" data-view="applications"><span class="nav-icon" aria-hidden="true">✓</span><span class="nav-label">Applications</span></button>
+      <button class="nav-item" data-view="interviews"><span class="nav-icon" aria-hidden="true">☎</span><span class="nav-label">Interview Tracker</span></button>
+      <button class="nav-item" data-view="analytics"><span class="nav-icon" aria-hidden="true">◔</span><span class="nav-label">Analytics</span></button>
+      <button class="nav-item" data-view="assistant"><span class="nav-icon" aria-hidden="true">✳</span><span class="nav-label">AI Assistant</span></button>
+      <button class="nav-item" data-view="settings"><span class="nav-icon" aria-hidden="true">⚙</span><span class="nav-label">Settings</span></button>
     </nav>
 
     <div class="sidebar-footer">
       <div class="sidebar-profile">
-        <span class="sidebar-avatar" aria-hidden="true">S</span>
+        <span class="sidebar-avatar" id="sidebarAvatarInitial" aria-hidden="true">?</span>
         <div class="sidebar-profile-text">
-          <span class="sidebar-profile-name">Suhail</span>
-          <span class="sidebar-profile-role">Job seeker · Hyderabad</span>
+          <span class="sidebar-profile-name" id="sidebarProfileName">Set up your profile</span>
+          <span class="sidebar-profile-role" id="sidebarProfileLocation">—</span>
         </div>
       </div>
       <div id="storageStatus" class="storage-status" role="status">checking storage…</div>
-      <div class="sidebar-version">v1.0.0</div>
+      <div class="sidebar-version">v2.0.0</div>
     </div>
   </aside>
 
   <!-- ============ MAIN ============ -->
   <div class="main-wrap">
 
-    <!-- Sticky top header -->
     <header class="topbar">
       <div class="topbar-greeting">
-        <h1 id="greetingText">Good morning, Suhail</h1>
+        <h1 id="greetingText">Welcome</h1>
         <p class="topbar-date" id="todayDateHeader"></p>
       </div>
 
@@ -90,11 +223,11 @@
           <span aria-hidden="true">🔔</span>
           <span class="notif-dot" aria-hidden="true"></span>
         </button>
-        <button class="btn btn-primary nav-item" data-view="intake" id="quickAddJobBtn">
-          <span aria-hidden="true">+</span> Quick Add Job
+        <button class="btn btn-primary nav-item" data-view="hunter" id="quickAddJobBtn">
+          <span aria-hidden="true">+</span> Start Hunting
         </button>
-        <button class="icon-btn avatar-btn nav-item" data-view="settings" aria-label="Open profile settings">
-          <span class="sidebar-avatar small" aria-hidden="true">S</span>
+        <button class="icon-btn avatar-btn nav-item" data-view="profile" aria-label="Open your profile">
+          <span class="sidebar-avatar small" id="topbarAvatarInitial" aria-hidden="true">?</span>
         </button>
       </div>
     </header>
@@ -105,14 +238,14 @@
       <section class="view" id="view-dashboard" aria-labelledby="dashboardHeading">
         <div class="hero-card">
           <div class="hero-text">
-            <p class="eyebrow">Welcome back</p>
+            <p class="eyebrow">Today's scan</p>
             <h2 id="dashboardHeading">Let's find your next role today.</h2>
-            <p class="hero-sub">Here's where your search stands right now — new matches, what needs action, and what's coming due.</p>
+            <p class="hero-sub" id="heroSubtext">Set up your profile to start matching real jobs against your background.</p>
           </div>
           <div class="hero-goal-card">
-            <p class="goal-label">Today's goal</p>
-            <p class="goal-value">Review 5 new matches</p>
-            <div class="goal-progress"><div class="goal-progress-fill" style="width:40%"></div></div>
+            <p class="goal-label">Jobs found today</p>
+            <p class="goal-value" id="jobsFoundToday">0</p>
+            <div class="goal-progress"><div class="goal-progress-fill" id="jobsFoundProgress" style="width:0%"></div></div>
           </div>
         </div>
 
@@ -120,191 +253,328 @@
 
         <div class="dash-grid">
           <div class="panel">
-            <div class="panel-head">
-              <h3>Best matches</h3>
-            </div>
+            <div class="panel-head"><h3>High match jobs</h3></div>
             <div id="bestMatches" class="mini-list"></div>
           </div>
           <div class="panel">
-            <div class="panel-head">
-              <h3>Needs manual action</h3>
-            </div>
-            <div id="manualQueue" class="mini-list"></div>
-          </div>
-          <div class="panel">
-            <div class="panel-head">
-              <h3>Upcoming deadlines</h3>
-            </div>
+            <div class="panel-head"><h3>Upcoming deadlines</h3></div>
             <div id="deadlineList" class="mini-list"></div>
           </div>
           <div class="panel">
-            <div class="panel-head">
-              <h3>Applied recently</h3>
-            </div>
+            <div class="panel-head"><h3>Interviews</h3></div>
+            <div id="interviewList" class="mini-list"></div>
+          </div>
+          <div class="panel">
+            <div class="panel-head"><h3>Applications</h3></div>
             <div id="appliedRecent" class="mini-list"></div>
           </div>
         </div>
 
-        <div class="dash-grid dash-grid-secondary">
-          <div class="panel">
-            <div class="panel-head"><h3>AI recommendations</h3></div>
-            <div class="placeholder-list">
-              <div class="placeholder-item">Add a few more sources so I can surface a wider spread of matches.</div>
-              <div class="placeholder-item">Consider generating documents for your top 2 High Priority jobs today.</div>
-            </div>
-          </div>
-          <div class="panel">
-            <div class="panel-head"><h3>Today's tasks</h3></div>
-            <div class="placeholder-list">
-              <label class="task-item"><input type="checkbox"> Review new matches</label>
-              <label class="task-item"><input type="checkbox"> Follow up on 1 pending application</label>
-              <label class="task-item"><input type="checkbox"> Add today's sourced jobs</label>
-            </div>
-          </div>
-        </div>
-
         <div class="panel">
-          <div class="panel-head">
-            <h3>Quick actions</h3>
-          </div>
-          <div class="quick-actions">
-            <button class="btn btn-secondary nav-item" data-view="intake">Paste a job</button>
-            <button class="btn btn-secondary nav-item" data-view="board">Open board</button>
-            <button class="btn btn-secondary nav-item" data-view="sources">Manage sources</button>
-            <button class="btn btn-secondary nav-item" data-view="assistant">Ask AI Assistant</button>
-          </div>
+          <div class="panel-head"><h3>AI suggestions</h3></div>
+          <div class="placeholder-list" id="aiSuggestions"></div>
         </div>
 
         <div class="panel">
           <div class="panel-head"><h3>Recent activity</h3></div>
-          <p class="empty-note">Your activity feed will populate as you file, score, and apply to jobs.</p>
+          <div class="mini-list" id="recentActivity"></div>
         </div>
       </section>
 
-      <!-- ============ JOB SCOUT (Intake) ============ -->
-      <section class="view hidden" id="view-intake" aria-labelledby="scoutHeading">
-        <div class="page-head">
-          <p class="eyebrow">Job Scout</p>
-          <h2 id="scoutHeading">Bring in a job</h2>
-          <p class="page-sub">Paste a posting, import several at once, or enter details manually — every job gets scored against your profile.</p>
-        </div>
-
-        <div class="tabs" role="tablist">
-          <button class="tab-btn active" data-tab="paste" role="tab" aria-selected="true">Paste Job</button>
-          <button class="tab-btn" data-tab="bulk" role="tab" aria-selected="false">Bulk Import</button>
-          <button class="tab-btn" data-tab="form" role="tab" aria-selected="false">Manual Entry</button>
-        </div>
-
-        <div class="tab-panel card" id="tab-paste" role="tabpanel">
-          <p class="hint">Paste the raw post text from Facebook, WhatsApp, a portal, or an email — as messy as it is. The assistant will pull out the details, score it, and file it.</p>
-          <label class="field-row">
-            <span>Job posting text</span>
-            <textarea id="pasteInput" rows="10" placeholder="Paste the job post here…"></textarea>
-          </label>
-          <label class="field-row">
-            <span>Source</span>
-            <input type="text" id="pasteSource" placeholder="e.g. Hyderabad Jobs FB Group">
-          </label>
-          <button class="btn btn-primary" id="btnProcessPaste">Process this job</button>
-        </div>
-
-        <div class="tab-panel hidden card" id="tab-bulk" role="tabpanel">
-          <p class="hint">Paste several postings at once. Separate each job with a line of dashes <code>---</code>. The assistant will split, extract, and score all of them in one pass.</p>
-          <label class="field-row">
-            <span>Job postings</span>
-            <textarea id="bulkInput" rows="14" placeholder="Job 1 text...
----
-Job 2 text...
----
-Job 3 text..."></textarea>
-          </label>
-          <label class="field-row">
-            <span>Source (applies to all)</span>
-            <input type="text" id="bulkSource" placeholder="e.g. Weekly portal sweep">
-          </label>
-          <button class="btn btn-primary" id="btnProcessBulk">Process all</button>
-        </div>
-
-        <div class="tab-panel hidden card" id="tab-form" role="tabpanel">
-          <p class="hint">Already know the details? Skip extraction and enter them directly — still gets scored automatically.</p>
-          <div class="form-grid">
-            <label class="field-row"><span>Job title</span><input id="fTitle" type="text"></label>
-            <label class="field-row"><span>Company / organisation</span><input id="fCompany" type="text"></label>
-            <label class="field-row"><span>Location</span><input id="fLocation" type="text" value="Hyderabad, Sindh"></label>
-            <label class="field-row"><span>Salary (if known)</span><input id="fSalary" type="text" placeholder="e.g. 35,000–40,000 PKR"></label>
-            <label class="field-row"><span>Deadline</span><input id="fDeadline" type="date"></label>
-            <label class="field-row">
-              <span>Apply method</span>
-              <select id="fApplyMethod">
-                <option value="email">Email</option>
-                <option value="whatsapp">WhatsApp</option>
-                <option value="website">Website / portal form</option>
-                <option value="inperson">In person / walk-in</option>
-              </select>
-            </label>
-            <label class="field-row"><span>Contact (email / number / link)</span><input id="fContact" type="text"></label>
-            <label class="field-row full"><span>Description / requirements</span><textarea id="fDesc" rows="5"></textarea></label>
-          </div>
-          <button class="btn btn-primary" id="btnProcessForm">Score and file this job</button>
-        </div>
-
-        <div id="intakeStatus" class="intake-status hidden" role="status"></div>
-        <div id="intakeResults" class="intake-results"></div>
-      </section>
-
-      <!-- ============ JOB BOARD ============ -->
-      <section class="view hidden" id="view-board" aria-labelledby="boardHeading">
+      <!-- ============ MY PROFILE ============ -->
+      <section class="view hidden" id="view-profile" aria-labelledby="profileHeading">
         <div class="page-head page-head-row">
           <div>
-            <p class="eyebrow">Job Board</p>
-            <h2 id="boardHeading">Kanban view</h2>
+            <p class="eyebrow">My Profile</p>
+            <h2 id="profileHeading">Your information</h2>
+          </div>
+          <button class="btn btn-primary" id="btnSaveProfile">Save profile</button>
+        </div>
+
+        <div class="card">
+          <div class="panel-head"><h3>Profile picture</h3></div>
+          <div class="profile-pic-row">
+            <div class="profile-pic-preview" id="profilePicPreview" aria-hidden="true">?</div>
+            <div>
+              <input type="file" id="profilePicInput" accept="image/*" hidden>
+              <button class="btn btn-secondary btn-small" id="btnUploadPic" type="button">Upload photo</button>
+              <button class="btn btn-ghost btn-small" id="btnRemovePic" type="button">Remove</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="panel-head"><h3>Personal information</h3></div>
+          <div class="form-grid">
+            <label class="field-row"><span>Full name</span><input id="pName" type="text"></label>
+            <label class="field-row"><span>Email</span><input id="pEmail" type="email"></label>
+            <label class="field-row"><span>Phone</span><input id="pPhone" type="text"></label>
+            <label class="field-row"><span>Country</span><input id="pCountry" type="text"></label>
+            <label class="field-row"><span>Province / State</span><input id="pProvince" type="text"></label>
+            <label class="field-row"><span>City</span><input id="pCity" type="text"></label>
+            <label class="field-row full"><span>Address</span><input id="pAddress" type="text"></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="panel-head"><h3>Education</h3></div>
+          <div class="form-grid">
+            <label class="field-row"><span>Degree</span><input id="pDegree" type="text"></label>
+            <label class="field-row"><span>University / Institute</span><input id="pUniversity" type="text"></label>
+            <label class="field-row"><span>Passing year</span><input id="pPassingYear" type="text"></label>
+            <label class="field-row"><span>CGPA / Percentage</span><input id="pCgpa" type="text"></label>
+          </div>
+          <div class="field-row full">
+            <span>Certificates</span>
+            <div class="tag-input-row">
+              <input id="pCertInput" type="text" placeholder="Add a certificate and press Enter">
+              <button class="btn btn-secondary btn-small" id="pCertAdd" type="button">Add</button>
+            </div>
+            <div class="tag-list" id="pCertList"></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="panel-head"><h3>Skills</h3></div>
+          <div class="tag-input-row">
+            <input id="pSkillInput" type="text" placeholder="Add a skill and press Enter">
+            <button class="btn btn-secondary btn-small" id="pSkillAdd" type="button">Add</button>
+          </div>
+          <div class="tag-list" id="pSkillList"></div>
+        </div>
+
+        <div class="card">
+          <div class="panel-head"><h3>Experience</h3></div>
+          <div class="form-grid">
+            <label class="field-row"><span>Type</span>
+              <select id="pExpType">
+                <option value="job">Previous job</option>
+                <option value="internship">Internship</option>
+                <option value="volunteer">Volunteer work</option>
+              </select>
+            </label>
+            <label class="field-row"><span>Role / title</span><input id="pExpRole" type="text"></label>
+            <label class="field-row"><span>Organisation</span><input id="pExpOrg" type="text"></label>
+            <label class="field-row"><span>Duration</span><input id="pExpDuration" type="text"></label>
+            <label class="field-row full"><span>Description</span><textarea id="pExpDesc" rows="3"></textarea></label>
+          </div>
+          <button class="btn btn-secondary btn-small" id="pExpAdd" type="button">Add experience</button>
+          <div class="entry-list" id="pExpList"></div>
+        </div>
+
+        <div class="card">
+          <div class="panel-head"><h3>Preferred job categories</h3></div>
+          <div class="checkbox-grid" id="pCategoryGrid">
+            <label class="checkbox-tile"><input type="checkbox" value="government"><span>Government</span></label>
+            <label class="checkbox-tile"><input type="checkbox" value="ngo"><span>NGO</span></label>
+            <label class="checkbox-tile"><input type="checkbox" value="private"><span>Private</span></label>
+            <label class="checkbox-tile"><input type="checkbox" value="teaching"><span>Teaching</span></label>
+            <label class="checkbox-tile"><input type="checkbox" value="administration"><span>Administration</span></label>
+            <label class="checkbox-tile"><input type="checkbox" value="hr"><span>HR</span></label>
+            <label class="checkbox-tile"><input type="checkbox" value="it"><span>IT</span></label>
+            <label class="checkbox-tile"><input type="checkbox" value="data_entry"><span>Data Entry</span></label>
+            <label class="checkbox-tile"><input type="checkbox" value="customer_support"><span>Customer Support</span></label>
+            <label class="checkbox-tile"><input type="checkbox" value="remote"><span>Remote</span></label>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="panel-head"><h3>Preferred cities</h3></div>
+          <div class="tag-input-row">
+            <input id="pCityInput" type="text" placeholder="Add a city and press Enter">
+            <button class="btn btn-secondary btn-small" id="pCityAdd" type="button">Add</button>
+          </div>
+          <div class="tag-list" id="pCityList"></div>
+        </div>
+      </section>
+
+      <!-- ============ RESUME ============ -->
+      <section class="view hidden" id="view-resume" aria-labelledby="resumeHeading">
+        <div class="page-head">
+          <p class="eyebrow">Resume</p>
+          <h2 id="resumeHeading">Your resume</h2>
+          <p class="page-sub">Upload once — the assistant uses it, alongside your profile, to tailor every application.</p>
+        </div>
+
+        <div class="card">
+          <div class="dropzone" id="resumeDropzone" tabindex="0" role="button" aria-label="Upload resume">
+            <span class="dropzone-icon" aria-hidden="true">⇧</span>
+            <p>Drag a file here, or click to browse (PDF, DOCX, TXT)</p>
+            <input type="file" id="resumeFileInput" accept=".pdf,.docx,.txt" hidden>
+          </div>
+          <div id="currentResumeInfo" class="file-chip hidden"></div>
+          <div class="quick-actions" style="margin-top:16px">
+            <button class="btn btn-secondary btn-small" id="btnReplaceResume">Replace resume</button>
+            <button class="btn btn-secondary btn-small" id="btnExtractResume">Extract details from resume</button>
+            <button class="btn btn-secondary btn-small" id="btnAnalyzeResume">Analyze resume</button>
+          </div>
+        </div>
+
+        <div class="card" id="resumeAnalysisCard">
+          <div class="panel-head"><h3>Resume analysis</h3></div>
+          <div id="resumeAnalysisResult" class="empty-note">Run "Analyze resume" to see strengths, gaps, and suggested improvements here.</div>
+        </div>
+
+        <div class="card">
+          <div class="panel-head"><h3>Resume history</h3></div>
+          <div id="resumeHistoryList" class="entry-list"><p class="empty-note">Previous resume versions will appear here.</p></div>
+        </div>
+      </section>
+
+      <!-- ============ JOB SOURCES ============ -->
+      <section class="view hidden" id="view-sources" aria-labelledby="sourcesHeading">
+        <div class="page-head">
+          <p class="eyebrow">Job Sources</p>
+          <h2 id="sourcesHeading">Where the assistant looks</h2>
+          <p class="page-sub">Toggle categories on or off, or add your own sources — Facebook groups, WhatsApp channels, portals, career pages.</p>
+        </div>
+
+        <div class="card">
+          <div class="field-row-inline">
+            <input type="text" id="sourceNameInput" placeholder="Source name">
+            <input type="text" id="sourceLinkInput" placeholder="Link (optional)">
+            <select id="sourceTypeInput">
+              <option>Government</option>
+              <option>NGO</option>
+              <option>Hospital</option>
+              <option>University</option>
+              <option>Organization</option>
+              <option>Job Portal</option>
+              <option>Company Career Page</option>
+              <option>Facebook Group</option>
+              <option>Facebook Page</option>
+              <option>WhatsApp Channel</option>
+              <option>Newspaper</option>
+              <option>Other</option>
+            </select>
+            <button class="btn btn-secondary" id="btnAddSource">Add source</button>
+          </div>
+        </div>
+
+        <div id="sourceList" class="source-list"></div>
+      </section>
+
+      <!-- ============ JOB HUNTER ============ -->
+      <section class="view hidden" id="view-hunter" aria-labelledby="hunterHeading">
+        <div class="page-head">
+          <p class="eyebrow">Job Hunter</p>
+          <h2 id="hunterHeading">Go hunting</h2>
+          <p class="page-sub">Scans your enabled sources for current postings and matches them against your profile.</p>
+        </div>
+
+        <div class="card hunter-card">
+          <button class="btn btn-primary btn-large" id="btnStartHunting">Start Hunting</button>
+          <div class="hunter-pipeline" id="hunterPipeline">
+            <div class="pipeline-step" data-step="scan"><span class="pipeline-dot"></span> Scanning sources</div>
+            <div class="pipeline-step" data-step="analyze"><span class="pipeline-dot"></span> Analyzing jobs</div>
+            <div class="pipeline-step" data-step="match"><span class="pipeline-dot"></span> Matching resume</div>
+            <div class="pipeline-step" data-step="rank"><span class="pipeline-dot"></span> Ranking jobs</div>
+            <div class="pipeline-step" data-step="save"><span class="pipeline-dot"></span> Saving results</div>
+          </div>
+          <div id="hunterResultSummary" class="empty-note">No hunt run yet.</div>
+        </div>
+
+        <div class="card">
+          <div class="panel-head"><h3>Add a job manually</h3></div>
+          <p class="hint">For sources that can't be searched automatically — like Facebook groups or WhatsApp channels — paste the posting here yourself.</p>
+          <div class="tabs" role="tablist">
+            <button class="tab-btn active" data-tab="paste" role="tab" aria-selected="true">Paste Job</button>
+            <button class="tab-btn" data-tab="bulk" role="tab" aria-selected="false">Bulk Import</button>
+            <button class="tab-btn" data-tab="form" role="tab" aria-selected="false">Manual Entry</button>
+          </div>
+
+          <div class="tab-panel" id="tab-paste" role="tabpanel">
+            <label class="field-row"><span>Job posting text</span><textarea id="pasteInput" rows="8" placeholder="Paste the job post here…"></textarea></label>
+            <label class="field-row"><span>Source</span><input type="text" id="pasteSource" placeholder="e.g. Hyderabad Jobs FB Group"></label>
+            <button class="btn btn-primary" id="btnProcessPaste">Process this job</button>
+          </div>
+
+          <div class="tab-panel hidden" id="tab-bulk" role="tabpanel">
+            <label class="field-row"><span>Job postings</span><textarea id="bulkInput" rows="10" placeholder="Job 1 text...
+---
+Job 2 text..."></textarea></label>
+            <label class="field-row"><span>Source (applies to all)</span><input type="text" id="bulkSource"></label>
+            <button class="btn btn-primary" id="btnProcessBulk">Process all</button>
+          </div>
+
+          <div class="tab-panel hidden" id="tab-form" role="tabpanel">
+            <div class="form-grid">
+              <label class="field-row"><span>Job title</span><input id="fTitle" type="text"></label>
+              <label class="field-row"><span>Company / organisation</span><input id="fCompany" type="text"></label>
+              <label class="field-row"><span>Location</span><input id="fLocation" type="text"></label>
+              <label class="field-row"><span>Salary (if known)</span><input id="fSalary" type="text"></label>
+              <label class="field-row"><span>Deadline</span><input id="fDeadline" type="date"></label>
+              <label class="field-row"><span>Apply method</span>
+                <select id="fApplyMethod">
+                  <option value="email">Email</option>
+                  <option value="whatsapp">WhatsApp</option>
+                  <option value="website">Website / portal form</option>
+                  <option value="inperson">In person / walk-in</option>
+                </select>
+              </label>
+              <label class="field-row"><span>Contact</span><input id="fContact" type="text"></label>
+              <label class="field-row full"><span>Description / requirements</span><textarea id="fDesc" rows="4"></textarea></label>
+            </div>
+            <button class="btn btn-primary" id="btnProcessForm">Score and file this job</button>
+          </div>
+
+          <div id="intakeStatus" class="intake-status hidden" role="status"></div>
+          <div id="intakeResults" class="intake-results"></div>
+        </div>
+      </section>
+
+      <!-- ============ MATCHED JOBS ============ -->
+      <section class="view hidden" id="view-matched" aria-labelledby="matchedHeading">
+        <div class="page-head page-head-row">
+          <div>
+            <p class="eyebrow">Matched Jobs</p>
+            <h2 id="matchedHeading">Ranked by fit</h2>
           </div>
           <div class="board-filters">
-            <select id="filterApply" aria-label="Filter by apply type">
+            <select id="filterApply">
               <option value="all">All apply types</option>
               <option value="auto">Auto-apply only</option>
               <option value="manual">Manual-apply only</option>
             </select>
-            <select id="filterStatus" aria-label="Filter by status">
-              <option value="active">Active (not applied/rejected)</option>
+            <select id="filterStatus">
+              <option value="active">Active</option>
               <option value="all">All statuses</option>
             </select>
           </div>
         </div>
 
-        <div class="board" id="board">
-          <div class="board-col" data-priority="high">
-            <h3 class="col-title col-high">High Priority</h3>
-            <div class="col-body" id="col-high"></div>
-          </div>
-          <div class="board-col" data-priority="medium">
-            <h3 class="col-title col-medium">Medium Priority</h3>
-            <div class="col-body" id="col-medium"></div>
-          </div>
-          <div class="board-col" data-priority="low">
-            <h3 class="col-title col-low">Low Priority</h3>
-            <div class="col-body" id="col-low"></div>
-          </div>
-        </div>
+        <div class="matched-grid" id="matchedGrid"></div>
       </section>
 
       <!-- ============ APPLICATIONS ============ -->
-      <section class="view hidden" id="view-applied" aria-labelledby="applicationsHeading">
+      <section class="view hidden" id="view-applications" aria-labelledby="applicationsHeading">
         <div class="page-head page-head-row">
           <div>
             <p class="eyebrow">Applications</p>
-            <h2 id="applicationsHeading">Everything you've sent</h2>
+            <h2 id="applicationsHeading">Tracker</h2>
           </div>
-          <div class="board-filters">
-            <input type="text" id="applicationsSearch" placeholder="Search applications…" aria-label="Search applications">
-          </div>
+          <input type="text" id="applicationsSearch" placeholder="Search applications…" aria-label="Search applications">
         </div>
-        <div class="card table-card">
-          <table class="applied-table">
-            <thead><tr><th>Job</th><th>Company</th><th>Applied on</th><th>Method</th><th>Status</th><th></th></tr></thead>
-            <tbody id="appliedTableBody"></tbody>
-          </table>
+
+        <div class="board" id="applicationsBoard">
+          <div class="board-col" data-stage="saved"><h3 class="col-title">Saved</h3><div class="col-body" id="stage-saved"></div></div>
+          <div class="board-col" data-stage="applied"><h3 class="col-title">Applied</h3><div class="col-body" id="stage-applied"></div></div>
+          <div class="board-col" data-stage="assessment"><h3 class="col-title">Assessment</h3><div class="col-body" id="stage-assessment"></div></div>
+          <div class="board-col" data-stage="interview"><h3 class="col-title">Interview</h3><div class="col-body" id="stage-interview"></div></div>
+          <div class="board-col" data-stage="offer"><h3 class="col-title">Offer</h3><div class="col-body" id="stage-offer"></div></div>
+          <div class="board-col" data-stage="rejected"><h3 class="col-title">Rejected</h3><div class="col-body" id="stage-rejected"></div></div>
+          <div class="board-col" data-stage="accepted"><h3 class="col-title">Accepted</h3><div class="col-body" id="stage-accepted"></div></div>
+          <div class="board-col" data-stage="archived"><h3 class="col-title">Archived</h3><div class="col-body" id="stage-archived"></div></div>
         </div>
+      </section>
+
+      <!-- ============ INTERVIEW TRACKER ============ -->
+      <section class="view hidden" id="view-interviews" aria-labelledby="interviewsHeading">
+        <div class="page-head">
+          <p class="eyebrow">Interview Tracker</p>
+          <h2 id="interviewsHeading">Upcoming and past interviews</h2>
+        </div>
+        <div id="interviewCards" class="entry-list"><p class="empty-note">No interviews scheduled yet — set an interview date from a job's details.</p></div>
       </section>
 
       <!-- ============ ANALYTICS ============ -->
@@ -312,37 +582,20 @@ Job 3 text..."></textarea>
         <div class="page-head">
           <p class="eyebrow">Analytics</p>
           <h2 id="analyticsHeading">How your search is trending</h2>
-          <p class="page-sub">A closer look at match quality, response rates, and where your best opportunities are coming from.</p>
         </div>
 
         <div class="stat-row">
           <div class="stat-card"><span class="stat-num">—</span><span class="stat-label">Average match score</span></div>
           <div class="stat-card"><span class="stat-num">—</span><span class="stat-label">Success rate</span></div>
-          <div class="stat-card"><span class="stat-num">—</span><span class="stat-label">Applications this week</span></div>
+          <div class="stat-card"><span class="stat-num">—</span><span class="stat-label">Applications total</span></div>
         </div>
 
         <div class="dash-grid">
-          <div class="panel chart-panel">
-            <div class="panel-head"><h3>Applications by category</h3></div>
-            <div class="chart-placeholder" role="img" aria-label="Pie chart placeholder">◔</div>
-          </div>
-          <div class="panel chart-panel">
-            <div class="panel-head"><h3>Applications by city</h3></div>
-            <div class="chart-placeholder" role="img" aria-label="Bar chart placeholder">▤</div>
-          </div>
-          <div class="panel chart-panel">
-            <div class="panel-head"><h3>Weekly progress</h3></div>
-            <div class="chart-placeholder" role="img" aria-label="Line chart placeholder">〰</div>
-          </div>
-          <div class="panel chart-panel">
-            <div class="panel-head"><h3>Monthly progress</h3></div>
-            <div class="chart-placeholder" role="img" aria-label="Bar chart placeholder">▤</div>
-          </div>
-        </div>
-
-        <div class="panel">
-          <div class="panel-head"><h3>Recent performance</h3></div>
-          <p class="empty-note">Charts will populate once analytics tracking is connected.</p>
+          <div class="panel chart-panel"><div class="panel-head"><h3>Applications</h3></div><div class="chart-placeholder" role="img" aria-label="Applications chart">▤</div></div>
+          <div class="panel chart-panel"><div class="panel-head"><h3>Match scores</h3></div><div class="chart-placeholder" role="img" aria-label="Match score chart">◔</div></div>
+          <div class="panel chart-panel"><div class="panel-head"><h3>Cities</h3></div><div class="chart-placeholder" role="img" aria-label="Cities chart">▤</div></div>
+          <div class="panel chart-panel"><div class="panel-head"><h3>Sources</h3></div><div class="chart-placeholder" role="img" aria-label="Sources chart">◔</div></div>
+          <div class="panel chart-panel" style="grid-column:1/-1"><div class="panel-head"><h3>Monthly activity</h3></div><div class="chart-placeholder" role="img" aria-label="Monthly activity chart">〰</div></div>
         </div>
       </section>
 
@@ -356,7 +609,7 @@ Job 3 text..."></textarea>
         <div class="assistant-layout">
           <div class="card assistant-chat">
             <div class="chat-messages" id="chatMessages">
-              <div class="chat-bubble chat-bubble-ai">Hi Suhail — ask me to find today's best jobs, improve your CV, draft a cover letter, or prep for an interview.</div>
+              <div class="chat-bubble chat-bubble-ai">Ask me to find today's best jobs, improve your CV, draft a cover letter, or prep for an interview.</div>
             </div>
             <form class="chat-input-row" id="chatInputRow">
               <input type="text" id="chatInput" placeholder="Ask the assistant…" aria-label="Message the AI assistant">
@@ -366,7 +619,7 @@ Job 3 text..."></textarea>
 
           <div class="assistant-suggestions">
             <h3>Quick actions</h3>
-            <button class="suggestion-chip" data-prompt="Find today's best jobs">Find today's best jobs</button>
+            <button class="suggestion-chip" data-prompt="Find today's best jobs">Best Jobs Today</button>
             <button class="suggestion-chip" data-prompt="Improve my CV">Improve my CV</button>
             <button class="suggestion-chip" data-prompt="Generate a cover letter">Generate Cover Letter</button>
             <button class="suggestion-chip" data-prompt="Give me interview questions">Interview Questions</button>
@@ -375,80 +628,27 @@ Job 3 text..."></textarea>
         </div>
       </section>
 
-      <!-- ============ SOURCES ============ -->
-      <section class="view hidden" id="view-sources" aria-labelledby="sourcesHeading">
-        <div class="page-head">
-          <p class="eyebrow">Sources</p>
-          <h2 id="sourcesHeading">Trusted places you watch</h2>
-          <p class="page-sub">A reference list only — open these yourself and paste postings into Job Scout; the assistant can't browse them for you.</p>
-        </div>
-
-        <div class="card">
-          <div class="field-row-inline">
-            <input type="text" id="sourceNameInput" placeholder="Source name, e.g. 'Hyderabad Govt &amp; Pvt Jobs' FB group">
-            <input type="text" id="sourceLinkInput" placeholder="Link (optional)">
-            <select id="sourceTypeInput">
-              <option>Facebook Group</option>
-              <option>Facebook Page</option>
-              <option>WhatsApp Channel</option>
-              <option>Job Portal</option>
-              <option>Company Career Page</option>
-              <option>Newspaper</option>
-              <option>Other</option>
-            </select>
-            <button class="btn btn-secondary" id="btnAddSource">Add source</button>
-          </div>
-        </div>
-
-        <div id="sourceList" class="source-list"></div>
-      </section>
-
       <!-- ============ SETTINGS ============ -->
       <section class="view hidden" id="view-settings" aria-labelledby="settingsHeading">
-        <div class="page-head page-head-row">
-          <div>
-            <p class="eyebrow">Settings</p>
-            <h2 id="settingsHeading">Your profile</h2>
-          </div>
-          <button class="btn btn-primary" id="btnSaveProfile">Save profile</button>
+        <div class="page-head">
+          <p class="eyebrow">Settings</p>
+          <h2 id="settingsHeading">App settings</h2>
         </div>
 
         <div class="note-box">
-          <strong>How this works:</strong> the AI features on this page (extraction, scoring, CV/cover letter generation) call Claude's API, which only functions while you're viewing this inside Claude. If you save this file and open it directly in a browser later, everything about saving/organising jobs still works, but the AI steps won't respond.
-        </div>
-
-        <div class="card">
-          <div class="panel-head"><h3>Profile</h3></div>
-          <div class="form-grid">
-            <label class="field-row"><span>Full name</span><input id="pName" type="text"></label>
-            <label class="field-row"><span>Location</span><input id="pLocation" type="text"></label>
-            <label class="field-row"><span>Phone</span><input id="pPhone" type="text"></label>
-            <label class="field-row"><span>Email</span><input id="pEmail" type="text"></label>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="panel-head"><h3>Education &amp; target</h3></div>
-          <div class="form-grid">
-            <label class="field-row"><span>Education</span><input id="pEducation" type="text"></label>
-            <label class="field-row"><span>Target salary range (PKR)</span><input id="pSalary" type="text"></label>
-            <label class="field-row full"><span>Target roles (comma separated)</span><input id="pRoles" type="text"></label>
-          </div>
-        </div>
-
-        <div class="card">
-          <div class="panel-head"><h3>Skills &amp; experience</h3></div>
-          <div class="form-grid">
-            <label class="field-row full"><span>Skills (comma separated)</span><input id="pSkills" type="text"></label>
-            <label class="field-row full"><span>Experience summary</span><textarea id="pExperience" rows="4"></textarea></label>
-            <label class="field-row full"><span>Languages</span><input id="pLanguages" type="text"></label>
-          </div>
+          <strong>How this works:</strong> the AI features (job matching, resume analysis, document generation, hunting) call Claude's API, which only functions while this page is open inside Claude.
         </div>
 
         <div class="card">
           <div class="panel-head"><h3>Preferences</h3></div>
           <div class="pref-row"><span>Notifications</span><label class="switch"><input type="checkbox" checked><span class="switch-track"></span></label></div>
-          <div class="pref-row"><span>Dark theme</span><label class="switch"><input type="checkbox" checked><span class="switch-track"></span></label></div>
+          <div class="pref-row"><span>Dark theme</span><label class="switch"><input type="checkbox"><span class="switch-track"></span></label></div>
+        </div>
+
+        <div class="card">
+          <div class="panel-head"><h3>Account</h3></div>
+          <button class="btn btn-secondary btn-small" id="btnRerunWizard">Re-run setup wizard</button>
+          <button class="btn btn-secondary btn-small btn-danger" id="btnResetProfile">Clear all my data</button>
         </div>
       </section>
 
