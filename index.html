@@ -219,10 +219,19 @@
       </div>
 
       <div class="topbar-actions">
-        <button class="icon-btn" id="notificationBell" aria-label="Notifications">
-          <span aria-hidden="true">🔔</span>
-          <span class="notif-dot" aria-hidden="true"></span>
-        </button>
+        <div class="notif-wrap">
+          <button class="icon-btn" id="notificationBell" aria-label="Notifications" aria-haspopup="true" aria-expanded="false">
+            <span aria-hidden="true">🔔</span>
+            <span class="notif-dot hidden" id="notifDot" aria-hidden="true"></span>
+          </button>
+          <div class="notif-panel hidden" id="notifPanel" role="menu" aria-label="Notifications">
+            <div class="notif-panel-head">
+              <span>Notifications</span>
+              <button class="btn-link" id="btnClearNotifs" type="button">Clear all</button>
+            </div>
+            <div class="notif-panel-list" id="notifPanelList"><p class="empty-note">You're all caught up.</p></div>
+          </div>
+        </div>
         <button class="btn btn-primary nav-item" data-view="hunter" id="quickAddJobBtn">
           <span aria-hidden="true">+</span> Start Hunting
         </button>
@@ -585,9 +594,9 @@ Job 2 text..."></textarea></label>
         </div>
 
         <div class="stat-row">
-          <div class="stat-card"><span class="stat-num">—</span><span class="stat-label">Average match score</span></div>
-          <div class="stat-card"><span class="stat-num">—</span><span class="stat-label">Success rate</span></div>
-          <div class="stat-card"><span class="stat-num">—</span><span class="stat-label">Applications total</span></div>
+          <div class="stat-card"><span class="stat-num" id="statAvgMatch">—</span><span class="stat-label">Average match score</span></div>
+          <div class="stat-card"><span class="stat-num" id="statSuccessRate">—</span><span class="stat-label">Success rate</span></div>
+          <div class="stat-card"><span class="stat-num" id="statTotalApps">—</span><span class="stat-label">Applications total</span></div>
         </div>
 
         <div class="dash-grid">
@@ -641,14 +650,25 @@ Job 2 text..."></textarea></label>
 
         <div class="card">
           <div class="panel-head"><h3>Preferences</h3></div>
-          <div class="pref-row"><span>Notifications</span><label class="switch"><input type="checkbox" checked><span class="switch-track"></span></label></div>
-          <div class="pref-row"><span>Dark theme</span><label class="switch"><input type="checkbox"><span class="switch-track"></span></label></div>
+          <div class="pref-row"><span>Notifications</span><label class="switch"><input type="checkbox" id="settingsNotifToggle" checked><span class="switch-track"></span></label></div>
+          <div class="pref-row"><span>Dark theme</span><label class="switch"><input type="checkbox" id="settingsThemeToggle"><span class="switch-track"></span></label></div>
         </div>
 
         <div class="card">
           <div class="panel-head"><h3>Account</h3></div>
           <button class="btn btn-secondary btn-small" id="btnRerunWizard">Re-run setup wizard</button>
           <button class="btn btn-secondary btn-small btn-danger" id="btnResetProfile">Clear all my data</button>
+        </div>
+
+        <div class="card">
+          <div class="panel-head"><h3>Backup &amp; restore</h3></div>
+          <p class="hint">Everything lives only in this browser. Export a backup regularly so you never lose your profile or applications.</p>
+          <div class="quick-actions">
+            <button class="btn btn-secondary btn-small" id="btnExportJSON">Export backup (JSON)</button>
+            <button class="btn btn-secondary btn-small" id="btnExportCSV">Export applications (CSV)</button>
+            <button class="btn btn-secondary btn-small" id="btnImportJSON">Restore from backup</button>
+            <input type="file" id="importFileInput" accept="application/json" hidden>
+          </div>
         </div>
       </section>
 
