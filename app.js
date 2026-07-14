@@ -1070,7 +1070,7 @@ class UIController {
             this.wizardData.personalInfo = {
                 name: this.$('wName').value.trim(), email: this.$('wEmail').value.trim(), phone: this.$('wPhone').value.trim(),
                 country: this.$('wCountry').value.trim(), province: this.$('wProvince').value.trim(),
-                city: this.$('wCity').value.trim(), address: this.$('wAddress').value.trim(), photo: this.wizardData.personalInfo.photo || ''
+                city: this.$('wCity').value.trim(), address: this.$('wAddress').value.trim(), photo: this.wizardData.personalInfo?.photo || ''
             };
             this.wizardData.education = {
                 degree: this.$('wDegree').value.trim(), university: this.$('wUniversity').value.trim(),
